@@ -1,0 +1,43 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <img width="300" src="https://www.amne.co/8dde3b4310fb70d44c6eba326d6f63ae.png">
+</div>
+<h4 class="alert alert-success mt-1 mb-0">Find within 10 miles Real Estate Agencies on Austin </h4>
+<div class="container-flow">
+  <div class="form-group mb-0">
+    <input #address placeholder="search for location A" autocorrect="off" autocapitalize="off" 
+      spellcheck="off" type="text" (keyup)="onchange($event, 0)" class="form-control col-5 float-left">
+    <input #address placeholder="search for location B" autocorrect="off" autocapitalize="off" 
+      spellcheck="off" type="text" (keyup)="onchange($event, 1)" class="form-control float-left col-5">
+    <button type="submit" class="col-2 btn btn-primary mx-auto mt-sm-10" 
+      (click)="search()" [disabled]="!locations[0] || !locations[1]">search</button>
+  </div>
+  <section style="position:relative">
+    <agm-map [latitude]="locations[0]?.latitude || Austin.latitude" [longitude]="locations[0]?.longitude || Austin.longitude" [scrollwheel]="true" [zoom]="zoom">
+      <agm-marker *ngFor="let location of locations; let i=index" [label]="i==0?'A':'B'"   [latitude]="location?.latitude" [longitude]="location?.longitude"></agm-marker>
+      <agm-marker *ngFor="let agent of agencies; let i = index" [label]="(i+1)+''"
+        [latitude]="agent.latitude" [longitude]="agent.longitude" (markerClick)="clickedMarker(i)">
+        <agm-info-window [isOpen]="agent.isOpen">
+          <b>{{agent.name}}</b><br/>
+          {{agent.addr}}
+        </agm-info-window>
+      </agm-marker>
+    </agm-map>
+    <aside class="agent-list">
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h6 class="panel-title">Search Result: <span class="badge">{{agencies.length}}</span></h6>
+          </div>
+          <div class="panel-body">
+              <ul class="list-group">
+                  <li *ngFor="let agent of agencies; let i = index" class="list-group-item" (click)="clickedMarker(i)">
+                    <div><span class="badge">{{i + 1}}</span></div>
+                    <div class="card">{{agent.name}}</div>
+                    <div class="alert alert-success">{{agent.addr}}</div>
+                  </li>
+                </ul>
+          </div>              
+      </div>       
+    </aside >
+  </section>
+</div>
